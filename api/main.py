@@ -21,7 +21,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
 # Use the production domain for generating URLs
-BASE_URL = os.getenv("BASE_URL", "https://url-shortener-1ssj9dqck-tintayadevs-projects.vercel.app/")
+BASE_URL = os.getenv("BASE_URL", "https://url-shortener-1ssj9dqck-tintayadevs-projects.vercel.app")
 
 
 # Dependency to get DB session
