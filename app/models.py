@@ -1,8 +1,9 @@
-from sqlalchemy import Column, String
-from .database import Base  # Import Base from database.py
+from sqlalchemy import Column, Integer, String
+from app.database import Base
 
-class URL(Base):
+class Url(Base):
     __tablename__ = "urls"
 
-    short_id = Column(String, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
+    short_id = Column(String, unique=True, index=True)
     original_url = Column(String, unique=True, index=True)

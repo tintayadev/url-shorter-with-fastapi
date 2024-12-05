@@ -1,6 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from starlette.requests import Request
 from .schemas import URLCreate, URLResponse
 from .crud import create_short_url, get_url_by_short_id, get_url_by_original_url
 from .database import SessionLocal, engine
@@ -10,6 +13,9 @@ from .models import Base
 app = FastAPI()
 
 Base.metadata.create_all(bind=engine)
+
+templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Dependency to get DB session
 def get_db():
@@ -38,3 +44,7 @@ def redirect(short_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="URL not found")
     
     return RedirectResponse(url=db_url.original_url)
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})

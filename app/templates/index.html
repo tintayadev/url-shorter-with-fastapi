@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        
+        <form id="url-form" method="POST" action="/shorten/">
+            <input type="url" id="url" name="url" placeholder="Enter a URL" required>
+            <button type="submit">Shorten URL</button>
+        </form>
+
+        <div id="short-url-container" style="display:none;">
+            <p>Your shortened URL is:</p>
+            <input type="text" id="short-url" readonly>
+            <button id="copy-btn" onclick="copyToClipboard()">Copy</button>
+        </div>
+    </div>
+
+    <script>
+        // Handling form submission and displaying the result
+        const form = document.getElementById("url-form");
+        const shortUrlContainer = document.getElementById("short-url-container");
+        const shortUrlInput = document.getElementById("short-url");
+
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            const url = document.getElementById("url").value;
+            
+            const response = await fetch("/shorten/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ url: url })
+            });
+
+            const data = await response.json();
+            if (data.short_url) {
+                shortUrlInput.value = data.short_url;
+                shortUrlContainer.style.display = "block";
+            } else {
+                alert("There was an error generating the shortened URL.");
+            }
+        };
+
+        // Function to copy the shortened URL to clipboard
+        function copyToClipboard() {
+            shortUrlInput.select();
+            document.execCommand("copy");
+            
+            // Change button text and style to show success
+            copyBtn.textContent = "Copied!";
+            copyBtn.style.backgroundColor = "#28a745"; // Green color for success
+
+            // Reset the button after 2 seconds
+            setTimeout(() => {
+                copyBtn.textContent = "Copy";
+                copyBtn.style.backgroundColor = "#007bff"; // Original color
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
