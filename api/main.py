@@ -4,10 +4,10 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from starlette.requests import Request
-from .schemas import URLCreate, URLResponse
-from .crud import create_short_url, get_url_by_short_id, get_url_by_original_url
-from .database import SessionLocal, engine
-from .models import Base
+from app.schemas import URLCreate, URLResponse
+from app.crud import create_short_url, get_url_by_short_id, get_url_by_original_url
+from app.database import SessionLocal, engine
+from app.models import Base
 import os
 
 
@@ -21,7 +21,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
 # Use the production domain for generating URLs
-BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
+BASE_URL = os.getenv("BASE_URL", "https://url-shortener-1ssj9dqck-tintayadevs-projects.vercel.app/")
 
 
 # Dependency to get DB session
